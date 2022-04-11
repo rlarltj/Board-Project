@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boardproject.ch4.dao.UserMapper">
+
+    <select id="count" resultType="int">
+        SELECT count(*) from user_info;
+    </select>
+
+    <select id="select" parameterType="String" resultType="UserDto">
+        SELECT id, pwd, name, email, birth, sns, reg_date
+        FROM user_info
+        WHERE id = #{id}
+    </select>
+
+    <select id="insert" parameterType="BoardDto">
+        INSERT into user_info (id, pwd, name)
+        values (#{id}, #{pwd}, #{name})
+    </select>
+
+    <delete id="delete" parameterType="map">
+        delete from user_info where id=#{id} and pwd=#{pwd}
+    </delete>
+
+    <delete id="deleteAll">
+        DELETE from user_info;
+    </delete>
+
+<!--    <delete id="delete" parameterType="map">-->
+<!--        DELETE from board WHERE bno = #{bno} and writer = #{writer};-->
+<!--    </delete>-->
+
+    <select id="selectAll" resultType="UserDto">
+        select id, pwd, name, email, birth, sns, reg_date
+        from user_info
+        ORDER by reg_date DESC, name DESC;
+    </select>
+
+
+    <update id="update" parameterType="UserDto">
+        UPDATE user_info SET
+                         name = #{name}
+        WHERE id=#{id} and pwd = #{pwd}
+    </update>
+
+</mapper>
