@@ -2,20 +2,13 @@ package com.boardproject.ch4.domain;
 
 public class PageHandler {
 
-//    private int page;
-//    private int pageSize;
-//    private String option;
-//    private String keyword;
-//    SearchCondition으로 묶는다.
-
     private SearchCondition sc;
 
     private int naviSize = 10;
-    private int totalCnt;
-    private int totalPage; // 전체 페이지 개수
+    private int totalCnt;  // 전체 게시글 수
+    private int totalPage; // 전체 페이지 수
     private int beginPage;
     private int endPage;
-
 
     boolean showPrev; // 이전 페이지의 링크를 보여줄 지 여부
     boolean showNext; // 다음 페이지의 링크를 보여줄 지 여부

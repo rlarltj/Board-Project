@@ -152,7 +152,7 @@ $("#commentList").on("click", ".replyBtn", function() {
     /**
      * 댓글 삭제 기능
      */
-    $("#commentList").on("click", ".delBtn", function(){
+$("#commentList").on("click", ".delBtn", function(){
 
   let cno = $(this).parent().attr("data-cno");
   let bno = $(this).parent().attr("data-bno");
@@ -186,7 +186,7 @@ $("#commentList").on("click", ".replyBtn", function() {
 
     $.ajax({
       type:'POST',       // 요청 메서드
-      url: '/ch4/comments?bno='+bno,  // 요청 URI
+      url: '/comments?bno='+bno,  // 요청 URI
       headers : {"content-type": "application/json"},
       data : JSON.stringify({bno: bno, comment: comment}),
       success : function(result){
