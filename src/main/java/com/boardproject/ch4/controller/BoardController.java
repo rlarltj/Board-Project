@@ -33,7 +33,6 @@ public class BoardController {
             int totalCnt = boardService.getSearchResultCnt(sc);
             PageHandler ph = new PageHandler(totalCnt, sc);
 
-
             List<BoardDto> list = boardService.getSearchResultPage(sc);
             m.addAttribute("totalCnt", totalCnt);
             m.addAttribute("list", list);

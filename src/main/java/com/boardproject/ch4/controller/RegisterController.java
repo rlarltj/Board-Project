@@ -11,17 +11,22 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 @Controller
 public class RegisterController {
     @Autowired
     UserService userService;
 
     @GetMapping("/register/add")
-    public String RegisterForm(){
+    public String RegisterForm(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        session.invalidate();
         return "registerForm";
     }
 
-    @PostMapping("/login/add")
+    @PostMapping("/register/add")
     public String Register(@ModelAttribute UserDto user, Model model) {
         try {
             if(validDuplicateId(user)){
@@ -35,7 +40,7 @@ public class RegisterController {
         }
 
         model.addAttribute("name", user.getName());
-        return "index";
+        return "redirect:/login/login";
     }
 
     private boolean validDuplicateId(UserDto user) throws Exception {

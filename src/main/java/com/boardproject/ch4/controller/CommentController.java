@@ -44,8 +44,8 @@ public class CommentController {
     @ResponseBody
     @PostMapping("/comments")
     public ResponseEntity<String> write(@RequestBody CommentDto dto, Integer bno, HttpSession session){
-        //String commenter = (String) session.getAttribute("id");
-        String commenter = "kiseo";
+        String commenter = (String) session.getAttribute("id");
+//        String commenter = "kiseo";
         dto.setCommenter(commenter);
         dto.setBno(bno);
         try {
@@ -64,8 +64,8 @@ public class CommentController {
     @ResponseBody
     @DeleteMapping("/comments/{cno}")  //    /comments/1 <-- 삭제할 댓글 번호
     public ResponseEntity<String> remove(HttpSession session, @PathVariable Integer cno, Integer bno) {
-//        String commenter = (String) session.getAttribute("id");
-        String commenter = "kiseo";
+        String commenter = (String) session.getAttribute("id");
+//        String commenter = "kiseo";
         try {
             int rowCnt = commentService.remove(cno, bno, commenter);
 

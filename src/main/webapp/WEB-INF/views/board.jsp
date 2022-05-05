@@ -8,7 +8,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>fastcampus</title>
+    <title>기서의 게시판</title>
     <link rel="stylesheet" href="<c:url value='/css/menu2.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/comment2.css'/>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -78,6 +78,12 @@
             border-bottom : 1px solid rgb(235,236,239);
             padding : 18px 18px 0 18px;
         }
+        .delBtn{
+            margin-right: 10px;
+        }
+        .replyBtn{
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -116,6 +122,7 @@
         </c:if>
         <button type="button" id="listBtn" class="btn btn-list"><i class="fa fa-bars"></i> 목록</button>
     </form>
+    <c:if test="${mode ne 'new'}">
     <div id="comment-writebox" style="margin-top: 30px">
         <div class="commenter commenter-writebox">${id}</div>
         <div class="comment-writebox-content">
@@ -127,6 +134,7 @@
             </div>
         </div>
     </div>
+    </c:if>
     <div id="commentList" style="height: 800px; width: 100%">
 
     </div>
@@ -142,30 +150,32 @@
             </div>
         </div>
     </div>
-    <div id="modalWin" class="modal">
-        <!-- Modal content -->
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <p>
-            <h2> | 댓글 수정</h2>
-            <div id="modify-writebox">
-                <div class="commenter commenter-writebox"></div>
-                <div class="modify-writebox-content">
-                    <textarea name="" id="" cols="30" rows="5" placeholder="댓글을 남겨보세요"></textarea>
-                </div>
-                <div id="modify-writebox-bottom">
-                    <div class="register-box">
-                        <a href="#" class="btn" id="btn-write-modify">등록</a>
-                    </div>
-                </div>
-            </div>
-            </p>
+</div>
+<div id="mycommentList"></div>
+<div id="comment-replybox" style="display: none">
+    <div class="commenter commenter-writebox">${id}</div>
+    <div class="comment-writebox-content">
+        <textarea name="reply"  cols="30" rows="3" placeholder="댓글을 남겨보세요"></textarea>
+    </div>
+    <div id="comment-replybox-bottom">
+        <div class="register-box">
+            <a href="#" class="btn" id="btn-reply-comment">등록</a>
         </div>
     </div>
 </div>
-<div id="mycommentList"></div>
+<div id="comment-modifybox" style="display: none">
+    <div class="commenter commenter-writebox">${id}</div>
+    <div class="comment-writebox-content">
+        <textarea name="reply"  cols="30" rows="3" placeholder="댓글을 남겨보세요"></textarea>
+    </div>
+    <div id="comment-modifybox-bottom">
+        <div class="register-box">
+            <a href="#" class="btn" id="btn-modify-comment">수정</a>
+        </div>
+    </div>
+</div>
 <script>
-    let bno = 782;
+    let bno = "${boardDto.bno}";
 
     $(document).ready(function(){
         showList(bno);
@@ -241,22 +251,24 @@
         $("#btn-write-comment").on("click", ()=>{
             let 댓글창 = $("textarea[name=comment]");
             let comment = 댓글창.val();
-            console.log(comment);
+            if(comment.trim() == ''){
+                alert("댓글을 입력해주세요.");
+                댓글창.focus();
+                return;
+            }
             $.ajax({
                 type: 'POST',
                 url: 'comments?bno='+bno,
                 headers : {"content-type": "application/json"},
                 data : JSON.stringify({bno: 782, comment: comment}),
                 success : function(result){
-                    alert("댓글이 등록되었슈");
+                    alert("댓글이 등록되었습니다");
                     showList(bno);
-                    댓글창.innerText("");
+                    댓글창.val('');
                 },
                 error : function(){ alert("error!")}
             });
         });
-
-
         /**
          * 댓글 삭제하기
          */
@@ -276,27 +288,109 @@
             }); // $.ajax()
 
     });
+        /**
+         * 댓글 수정 기능
+         */
+
+        $("#btn-modify-comment").click(()=>{
+            let cno = $("#comment-modifybox").parent().attr("data-cno");
+            let comment = $("textarea[name=reply]").val();
+
+            if(comment.trim() == ''){
+                alert("댓글을 입력해주세요.");
+                $("textarea[name=reply]").focus();
+                return;
+            }
+            $.ajax({
+                type:'PATCH',
+                url: '/ch4/board/comments/'+cno,
+                headers : {"content-type": "application/json"},
+                data : JSON.stringify({cno: cno, comment: comment}),
+                success: function(result){
+                    showList(bno);
+                    alert("수정이 완료되었습니다.");
+                },
+                error: function(){alert("error")}
+            })
+        })
+
+        /**
+         * 답글 기능
+         */
+        $("#btn-reply-comment").click(()=>{
+            let comment = $("textarea[name=reply]").val();
+            let pcno = $("#comment-replybox").parent().attr("data-pcno");
+
+            if(comment.trim() == ''){
+                alert("답글을 입력해주세요.");
+                $("textarea[name=reply]").focus();
+                return;
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: 'comments?bno='+bno,
+                headers : {"content-type": "application/json"},
+                data : JSON.stringify({pcno: pcno, bno: bno, comment: comment}),
+                success : function(result){
+                    showList(bno);
+                },
+                error : function(){
+                    alert("답글 등록 error");
+                }
+            })
+
+            $("#comment-replybox").css("display", "none");
+            $("textarea[name=reply]").val('');
+            $("#comment-replybox").appendTo("body");
+        })
+
+
     })
+
+$("#commentList").on("click", ".replyBtn", function (){
+   $("#comment-replybox").appendTo($(this).parent());
+   $("#comment-modifybox").css("display", "none");
+
+   $("#comment-replybox").css("display", "block");
+});
+$("#commentList").on("click", ".modBtn", function (){
+        $("#comment-modifybox").appendTo($(this).parent());
+        $("#comment-replybox").css("display", "none");
+        $("#comment-modifybox").css("display", "block");
+        let cno = $(this).parent().attr("data-cno");
+        let comment = $("span.comment", $(this).parent()).text();
+        $("textarea[name=reply]").val(comment);
+        $("textarea[name=reply]").focus();
+        $("#btn-modify-comment").attr("data-cno", cno);
+    });
 
 
     let toHtml = function(comments){
         let tmp = "<ul>";
+        let id = "${id}";
+        let tag = "";
 
         comments.forEach((com) => {
+            if(id === com.commenter){
+                tag = '<button class="delBtn">삭제</button><button class="modBtn">수정</button>';
+            }else{
+                tag = "";
+            }
             tmp +=
                 `<li data-cno= \${com.cno}
                     data-pcno=\${com.pcno}
                     data-bno= \${com.bno}>
                     \${com.cno != com.pcno ? 'ㄴ' : ''}
-                    commenter=<span class="commenter"> \${com.commenter} </span>
-                    comment =<span class="comment">  \${com.comment} </span>
-                    update= \${com.up_date}
-                    <button class="delBtn">삭제</button>
-                    <button class="modBtn">수정</button>
-                    <button class="replyBtn">답글</button>
-                </li>
-        `
+                    작성자=<span class="commenter"> \${com.commenter} </span></br>
+                    <span class="comment">  \${com.comment} </span></br>
+                    등록일= \${com.up_date}</br>`+
+                    `<button class="replyBtn">답글</button>\${tag}
+                 </li>`
+
+
         })
+
         return tmp +"</ul>";
 
     }

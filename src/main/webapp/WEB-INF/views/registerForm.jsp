@@ -8,7 +8,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>fastcampus</title>
+    <title>기서의 게시판</title>
     <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
     <link rel="stylesheet" href="<c:url value='/css/menu.css'/>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"/>
@@ -66,7 +66,7 @@
         <li id="logo">About</li>
         <li><a href="<c:url value='/'/>">Home</a></li>
         <li><a href="<c:url value='/board/list'/>">Board</a></li>
-        <li><a href="<c:url value='${loginOutLink}'/>">${loginOut}</a></li>
+        <li><a href="<c:url value='/login/login'/>">Login</a></li>
         <li><a href="<c:url value='/register/add'/>">Sign in</a></li>
         <li><a href=""><i class="fa fa-search"></i></a></li>
     </ul>
@@ -89,7 +89,6 @@
     <script>
         let msg = "${msg}";
         $(".error").html(msg);
-        console.log(msg);
         function formCheck(frm) {
             let msg ='';
             if(frm.id.value.length==0) {
@@ -100,6 +99,7 @@
                 setMessage('password를 입력해주세요.', frm.pwd);
                 return false;
             }
+            alert("가입을 축하합니다! 로그인해주세요.");
             return true;
         }
         function setMessage(msg, element){
