@@ -23,7 +23,7 @@ public class CommentController {
     public ResponseEntity<String> modify(@PathVariable Integer cno, @RequestBody CommentDto dto,
                                          HttpSession session){
         String commenter = (String) session.getAttribute("id");
-//        String commenter = "kiseo";
+//      String commenter = "kiseo";
         dto.setCommenter(commenter);
         dto.setCno(cno);
         System.out.println("dto = " +dto);
@@ -81,7 +81,7 @@ public class CommentController {
 
 
     @ResponseBody
-    @RequestMapping("/comments")    // comments?bno=?1080    GET
+    @RequestMapping("/comments")
     public ResponseEntity<List<CommentDto>> list(Integer bno){
         List<CommentDto> list = null;
         try {
