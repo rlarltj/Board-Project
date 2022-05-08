@@ -7,6 +7,7 @@ import com.boardproject.ch4.domain.BoardDto;
 import com.boardproject.ch4.domain.PageHandler;
 import com.boardproject.ch4.domain.SearchCondition;
 import com.boardproject.ch4.service.BoardService;
+import com.boardproject.ch4.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +23,8 @@ import java.util.List;
 public class BoardController {
     @Autowired
     BoardService boardService;
+//    @Autowired
+//    CommentService commentService;
 
     @GetMapping("/list")
     public String list(SearchCondition sc , Model m, HttpServletRequest request) {
@@ -39,10 +42,10 @@ public class BoardController {
             m.addAttribute("ph", ph);
             m.addAttribute("page", sc.getPage());
             m.addAttribute("pageSize", sc.getPageSize());
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
         return "boardList"; // 로그인을 한 상태이면, 게시판 화면으로 이동
     }

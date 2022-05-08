@@ -64,7 +64,6 @@ public class BoardDto {
     }
 
     public int getComment_cnt() {
-        System.out.println("댓글 수 메서드 호출!");
         return comment_Cnt;
     }
 
